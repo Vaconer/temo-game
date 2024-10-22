@@ -1,109 +1,165 @@
 import { useEffect, useState } from "react";
-import json from "../../util/words.json";  // Importa a lista de palavras
+import json from "../../util/words.json"; // Importa a lista de palavras
 
 export default function useController() {
-  const [word, setWord] = useState("");  // Palavra correta
-  const [guesses, setGuesses] = useState([]);  // Tentativas do jogador
-  const [currentGuessIndex, setCurrentGuessIndex] = useState(0);  // Índice da tentativa atual
-  const [message, setMessage] = useState("");  // Mensagem de feedback
-  const [isGameOver, setIsGameOver] = useState(false);  // Estado do fim do jogo
-  const [isWin, setIsWin] = useState(false);  // Estado de vitória
+  const [word, setWord] = useState(""); // Palavra correta
+  const [rows, setRows] = useState([]); // Tentativas do jogador
+  const [colors, setColors] = useState([]); // cores das letras de cada tentativa
+  const [currentRowIndex, setCurrentRowIndex] = useState(0); // Índice da tentativa atual
+  const [currentLetterIndex, setCurrentLetterIndex] = useState(0); // Índice da tentativa atual
+  const [message, setMessage] = useState(""); // Mensagem de feedback
+  const [isGameOver, setIsGameOver] = useState(false); // Estado do fim do jogo
+  const [isWin, setIsWin] = useState(false); // Estado de vitória
 
   // Função para escolher uma palavra aleatória da lista
   const getWord = () => {
     const randomIndex = Math.floor(Math.random() * json.words.length);
-    return json.words[randomIndex];
+    const newWord = json.words[randomIndex];
+    console.log("PALAVRA->", newWord);
+    return newWord;
   };
 
   // Função para inicializar o jogo
-  const fetchWord = () => {
+  const startGame = () => {
     const randomWord = getWord();
     setWord(randomWord);
-    
-    const initialGuesses = Array(6).fill(null).map(() => Array(randomWord.length).fill(""));
-    setGuesses(initialGuesses);
-    
+
+    setColors(
+      Array(6)
+        .fill(null)
+        .map(() => Array(randomWord.length).fill(""))
+    );
+
+    setRows(
+      Array(6)
+        .fill(null)
+        .map(() => Array(randomWord.length).fill(""))
+    );
+
     setIsGameOver(false);
     setIsWin(false);
-    setCurrentGuessIndex(0);
+    setCurrentRowIndex(0);
+    setCurrentLetterIndex(0);
     setMessage("");
   };
 
   useEffect(() => {
-    fetchWord();  // Inicia o jogo assim que o componente monta
+    startGame(); // Inicia o jogo assim que o componente monta
   }, []);
 
   // Função que lida com a entrada do teclado
   const handleKeyPress = (e) => {
     if (isGameOver) {
-      return;  // Se o jogo acabou, ignora as entradas
+      return; // Se o jogo acabou, ignora as entradas
     }
+    const { key } = e;
 
-    const currentGuess = guesses[currentGuessIndex];
-
-    if (/^[a-zA-Z]$/.test(e.key)) {
+    if (/^[a-zA-Z]$/.test(key)) {
       // Adiciona letra se for válida e houver espaço na tentativa atual
-      const newGuesses = [...guesses];
-      const emptyIndex = currentGuess.indexOf("");
+      const newRow = [...rows];
+      newRow[currentRowIndex][currentLetterIndex] = key.toLowerCase();
 
-      if (emptyIndex !== -1) {
-        newGuesses[currentGuessIndex][emptyIndex] = e.key.toLowerCase();
-        setGuesses(newGuesses);
-      }
-    } else if (e.key === "Enter") {
-      // Verifica a palavra ao pressionar Enter
-      handleGuess();
-    } else if (e.key === "Backspace") {
+      setRows(newRow);
+      currentLetterIndex < 4 && setCurrentLetterIndex((prev) => prev + 1);
+    } else if (key === "Backspace") {
       // Remove a última letra ao pressionar Backspace
-      const newGuesses = [...guesses];
-      const lastFilledIndex = currentGuess.findLastIndex((letter) => letter !== "");
+      const newRow = [...rows];
 
-      if (lastFilledIndex !== -1) {
-        newGuesses[currentGuessIndex][lastFilledIndex] = "";  // Remove a última letra
-        setGuesses(newGuesses);
-      }
+      newRow[currentRowIndex][currentLetterIndex] = ""; // Remove a última letra
+      setRows(newRow);
+
+      currentLetterIndex > 0 && setCurrentLetterIndex((prev) => prev - 1);
+    } else if (key === "ArrowLeft" && currentLetterIndex > 0) {
+      setCurrentLetterIndex((prev) => prev - 1);
+      //console.log("entrouuu");
+    } else if (key === "ArrowRight" && currentLetterIndex < 4) {
+      setCurrentLetterIndex((prev) => prev + 1);
+    } else if (key === "Enter") {
+      // Verifica a palavra ao pressionar Enter
+      handleRow();
     }
   };
-
+  useEffect(() => {
+    console.log("colors", colors);
+  }, [colors]);
+  useEffect(() => {
+    console.log("rows", rows);
+  }, [rows]);
+  const verifyIsWord = () => {
+    const word = rows[currentRowIndex].join("");
+    console.log("word", word);
+    return json.words.includes(word);
+  };
   // Função para verificar se a palavra está correta
-  const handleGuess = () => {
-    const guessString = guesses[currentGuessIndex].join("");
+  const handleRow = () => {
+    if (!verifyIsWord()) return;
+    compareWords();
+    const rowString = rows[currentRowIndex].join("");
 
-    if (guessString.length !== word.length) {
+    if (rowString.length !== word.length) {
       setMessage(`A palavra tem ${word.length} letras.`);
       return;
     }
 
-    if (guessString === word) {
+    if (rowString === word) {
       setIsGameOver(true);
       setIsWin(true);
       return;
     }
 
-    if (currentGuessIndex === 5) {
+    if (currentRowIndex === 5) {
       setIsGameOver(true);
       setIsWin(false);
       return;
     }
-
-    setCurrentGuessIndex(currentGuessIndex + 1);
+    setCurrentLetterIndex(0);
+    setCurrentRowIndex(currentRowIndex + 1);
     setMessage("");
   };
 
   // Função que retorna a cor para cada letra na tentativa
-  const getColor = (letter, index) => {
-    if (letter === word[index]) {
-      return "green";  // Letra correta na posição correta
-    } else if (word.includes(letter)) {
-      return "yellow";  // Letra está na palavra mas na posição errada
-    } else {
-      return "";  // Letra não está na palavra
+
+  const compareWords = () => {
+    const guessWord = rows[currentRowIndex].join("");
+    const result = Array(word.length).fill(""); // Inicializa o array de resultados
+    const usedIndexes = Array(word.length).fill(false); // Para marcar letras usadas
+
+    // Passo 1: Marca as letras verdes (corretas na posição correta)
+    for (let i = 0; i < guessWord.length; i++) {
+      if (guessWord[i] === word[i]) {
+        result[i] = "green";
+        usedIndexes[i] = true; // Marca essa letra como usada
+      }
     }
+
+    // Passo 2: Marca as letras amarelas (presentes na palavra mas na posição errada)
+    for (let i = 0; i < guessWord.length; i++) {
+      if (result[i] === "") {
+        // Se ainda não foi marcada como verde
+        const letter = guessWord[i];
+        const yellowIndex = word
+          .split("")
+          .findIndex(
+            (char, index) =>
+              char === letter &&
+              !usedIndexes[index] &&
+              result[index] !== "green"
+          );
+
+        if (yellowIndex !== -1) {
+          result[i] = "yellow";
+          usedIndexes[yellowIndex] = true; // Marca essa letra como usada
+        }
+      }
+    }
+    const updatedColors = [...colors];
+    updatedColors[currentRowIndex] = result;
+    setColors(updatedColors);
+    return result;
   };
 
-  // Função para reiniciar o jogo
-  const restartGame = () => {
-    fetchWord();
+  const onClickLetter = (index) => {
+    setCurrentLetterIndex(index);
   };
 
   // Lida com a adição e remoção do evento de teclado
@@ -112,17 +168,19 @@ export default function useController() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [guesses, currentGuessIndex, isGameOver]);
+  }, [rows, currentRowIndex, isGameOver, currentLetterIndex]);
 
   return {
+    rows,
     word,
-    guesses,
-    currentGuessIndex,
-    message,
-    isGameOver,
     isWin,
+    message,
+    colors,
+    isGameOver,
+    currentRowIndex,
+    currentLetterIndex,
+    startGame,
+    onClickLetter,
     handleKeyPress,
-    getColor,
-    restartGame, 
   };
 }

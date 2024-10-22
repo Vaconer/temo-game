@@ -1,0 +1,18 @@
+/* src/components/Game.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* Para 6 tentativas inicialmente */
+  gap: 5px; /* Espaçamento entre os quadrados */
+  margin-bottom: 20px;
+}
+
+.row {
+  display: contents; /* Para usar o grid corretamente */
+}

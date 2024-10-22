@@ -1,46 +1,42 @@
-import "../../styles/Game.css";
-import useController from "./controller"; 
-import LetterCard from "../../components/LetterCard";  
-import Modal from "../../components/ModalFinalMessage"; 
+import "./Game.css";
+import useController from "./controller";
+import LetterCard from "../../components/LetterCard";
+import ModalFinalMessage from "../../components/ModalFinalMessage";
 
 function Game() {
-  const controller = useController();  // Hook que retorna os dados e funções do jogo
+  const controller = useController(); // Hook que retorna os dados e funções do jogo
 
   return (
     <div className="container">
-      <h1>Termo Clone</h1>
+      <h1>Meu Termo</h1>
 
       {/* Tabuleiro do jogo */}
       <div
         className="board"
         style={{
-          gridTemplateColumns: `repeat(${controller.word.length}, 1fr)`,  // Define o número de colunas baseado na palavra
+          gridTemplateColumns: `repeat(${controller.word.length}, 1fr)`, // Define o número de colunas baseado na palavra
         }}
       >
         {/* Para cada tentativa, renderiza a linha de letras */}
-        {controller.guesses.map((guess, attemptIndex) => (
-          <div key={attemptIndex} className="guess-row">
-            {guess.map((letter, index) => {
-              let displayedLetter = letter;
-
-              // Verifica se é a tentativa atual e substitui letras vazias por "_"
-              if (attemptIndex === controller.currentGuessIndex) {
-                if (letter === "") {
-                  displayedLetter = "_";
-                }
-              }
-
-              let color = "";
-              // Aplica a cor se a tentativa for anterior à atual
-              if (attemptIndex < controller.currentGuessIndex) {
-                color = controller.getColor(letter, index);
-              }
+        {controller.rows.map((row, attemptIndex) => (
+          <div key={attemptIndex} className="row">
+            {row.map((letter, index, a) => {
+              const displayedLetter =
+                attemptIndex === controller.currentRowIndex && letter === ""
+                  ? "__"
+                  : letter;
 
               return (
                 <LetterCard
                   key={index}
-                  letter={displayedLetter}  // Letra ou "_"
-                  color={color}  // Cor, se aplicável
+                  letter={letter} // Letra ou "_"
+                  color={controller.colors[attemptIndex][index]} // Cor, se aplicável
+                  inFocus={
+                    index === controller.currentLetterIndex &&
+                    attemptIndex === controller.currentRowIndex
+                  } // Se é o foco
+                  disabled={attemptIndex > controller.currentRowIndex}
+                  onClick={() => controller.onClickLetter(index)}
                 />
               );
             })}
@@ -51,27 +47,13 @@ function Game() {
       {/* Mensagem de feedback */}
       <p>{controller.message}</p>
 
-      {/* Modal de fim de jogo */}
-      {(() => {
-        if (controller.isGameOver) {
-          let message;
-          if (controller.isWin) {
-            message = "Você Venceu!";
-          } else {
-            message = "Você Perdeu!";
-          }
-
-          return (
-            <Modal
-              message={message}  // Mensagem de vitória ou derrota
-              word={controller.word}  // Palavra correta
-              onRestart={controller.restartGame}  // Reinicia o jogo
-            />
-          );
-        } else {
-          return null;  // Retorna null se o jogo não acabou
-        }
-      })()}
+      {controller.isGameOver && (
+        <ModalFinalMessage
+          isWin={controller.isWin} // Se o jogo terminou em vitória ou derrota={message} // Mensagem de vitória ou derrot
+          word={controller.word} // Palavra correta
+          onRestart={controller.startGame} // Reinicia o jogo
+        />
+      )}
     </div>
   );
 }

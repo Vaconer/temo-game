@@ -1,0 +1,34 @@
+.letter {
+  text-transform: uppercase;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 50px; /* Tamanho do quadrado */
+  height: 50px; /* Tamanho do quadrado */
+  border: 3px solid #211d1e; /* Borda do quadrado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px; /* Tamanho da letra */
+  transition: background-color 0.3s; /* Transição suave para a cor de fundo */
+}
+
+.green {
+  background-color: #88b347;
+  border: 3px solid #88b347;
+}
+
+.yellow {
+  background-color: #d3ad69;
+  border: 3px solid #d3ad69;
+}
+
+.in-focus {
+  border: 3px solid #63575a !important;
+}
+.disabled {
+  background: rgba(0, 0, 0, 0.2) !important;
+  cursor: default !important;
+  border: 3px solid transparent !important;
+  //color: transparent !important;
+}
