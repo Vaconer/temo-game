@@ -1,0 +1,46 @@
+/* Wrapper do modal para centralizá-lo na tela */
+.wrapper-modal {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Adiciona um overlay */
+  opacity: 0;
+  transition: opacity 500ms; /* Transição de opacidade suave */
+  pointer-events: none; /* Impede interação quando invisível */
+}
+
+/* Classe para exibir o modal */
+.wrapper-modal.show {
+  opacity: 1;
+  pointer-events: auto; /* Ativa interação quando visível */
+}
+
+/* Estilo do próprio modal */
+.modal {
+  padding: 5rem;
+  border-radius: 10px;
+  transition: opacity 500ms; /* Transição de opacidade suave */
+}
+
+/* Botão de ação */
+button {
+  padding: 1rem;
+  background: #400601;
+  border-radius: 10px;
+  border: hidden;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 0.6rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+button:hover {
+  opacity: 1;
+}
