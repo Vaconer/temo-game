@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# Termo Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este é um clone do jogo **Termo**, uma versão brasileira do famoso jogo de palavras **Wordle**, onde o jogador precisa adivinhar uma palavra em um número limitado de tentativas.
 
-## Available Scripts
+## 🚀 Tecnologias Utilizadas
 
-In the project directory, you can run:
+- **React**: Utilizado para a criação do front-end, permitindo uma interface interativa e responsiva para o jogo.
+- **CSS**: Para estilização da interface, tornando o jogo visualmente atraente e fácil de usar.
+- **JavaScript (ES6+)**: Utilizado para a lógica do jogo, manipulação dos dados e controle das tentativas do jogador.
+- **HTML5**: Estrutura básica da aplicação.
 
-### `npm start`
+## 📸 Exemplo do Jogo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Aqui está uma imagem de exemplo da interface do jogo:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![image](https://github.com/user-attachments/assets/8cc902cb-15e4-4d75-9982-642e67ab9301)
 
-### `npm test`
+## 📖 Funcionalidades
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Adivinhar palavras de 5 letras**: O jogador tem 6 tentativas para adivinhar a palavra correta.
+- **Feedback visual**: Cada tentativa fornece um feedback visual. Letras corretas e na posição correta ficam verdes, letras corretas mas na posição errada ficam amarelas, e letras erradas ficam cinzas.
+- **Interface Simples e Responsiva**: Layout otimizado para diferentes tamanhos de tela, proporcionando uma boa experiência tanto em desktop quanto em dispositivos móveis.
 
-### `npm run build`
+## 🛠️ Como foi feito
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Configuração inicial com Create React App**: O projeto foi iniciado utilizando o [Create React App](https://create-react-app.dev/), que fornece uma estrutura pronta para começar o desenvolvimento com React.
+2. **Lógica de validação de palavras**: Foi desenvolvida uma lógica que verifica as tentativas do jogador, comparando-as com a palavra correta e fornecendo o feedback visual.
+3. **Design e Estilização**: A interface foi estilizada com CSS, priorizando a simplicidade e a clareza visual.
+4. **Controle de Estado**: O React foi utilizado para gerenciar o estado das tentativas e as atualizações da interface conforme o jogador faz suas suposições.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🔧 Como executar o projeto
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Pré-requisitos
 
-### `npm run eject`
+- [Node.js](https://nodejs.org/en/) instalado na máquina.
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/) para gerenciamento de pacotes.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Passos para rodar
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
