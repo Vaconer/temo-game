@@ -40,3 +40,17 @@ Aqui está uma imagem de exemplo da interface do jogo:
 1. Clone o repositório:
    ```bash
    git clone https://github.com/seu-usuario/nome-do-repositorio.git
+
+2. Acesse a pasta do projeto:
+   ```bash
+   cd nome-do-repositorio
+
+3. Instale as dependências:
+   ```bash
+   npm install
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm start
+
+
