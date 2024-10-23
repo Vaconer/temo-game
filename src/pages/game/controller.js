@@ -10,6 +10,7 @@ export default function useController() {
   const [message, setMessage] = useState(""); // Mensagem de feedback
   const [isGameOver, setIsGameOver] = useState(false); // Estado do fim do jogo
   const [isWin, setIsWin] = useState(false); // Estado de vitória
+  const [isShaking, setIsShaking] = useState(false);
 
   // Função para escolher uma palavra aleatória da lista
   const getWord = () => {
@@ -54,14 +55,15 @@ export default function useController() {
     }
     const { key } = e;
 
-    if (/^[a-zA-Z]$/.test(key)) {
-      // Adiciona letra se for válida e houver espaço na tentativa atual
+    if (/^[a-zA-Z\u00C0-\u00FF]$/.test(key)) {
+      // Adiciona a letra se for válida e houver espaço na tentativa atual
       const newRow = [...rows];
       newRow[currentRowIndex][currentLetterIndex] = key.toLowerCase();
 
       setRows(newRow);
       currentLetterIndex < 4 && setCurrentLetterIndex((prev) => prev + 1);
-    } else if (key === "Backspace") {
+    }
+    else if (key === "Backspace") {
       // Remove a última letra ao pressionar Backspace
       const newRow = [...rows];
 
@@ -77,6 +79,7 @@ export default function useController() {
     } else if (key === "Enter") {
       // Verifica a palavra ao pressionar Enter
       handleRow();
+
     }
   };
   useEffect(() => {
@@ -91,16 +94,22 @@ export default function useController() {
     return json.words.includes(word);
   };
   // Função para verificar se a palavra está correta
+
   const handleRow = () => {
-    if (!verifyIsWord()) return;
-    compareWords();
     const rowString = rows[currentRowIndex].join("");
+
+    // Verifica se a palavra é válida no arquivo words.json
+    if (!verifyIsWord()) {
+      setIsShaking(true)
+      return; // Se a palavra não existe, interrompe o fluxo
+    }
 
     if (rowString.length !== word.length) {
       setMessage(`A palavra tem ${word.length} letras.`);
       return;
     }
 
+    // Verifica se a palavra está correta
     if (rowString === word) {
       setIsGameOver(true);
       setIsWin(true);
@@ -112,10 +121,14 @@ export default function useController() {
       setIsWin(false);
       return;
     }
+
+    // Se tudo está OK, vai para a próxima linha e reseta o índice da letra
     setCurrentLetterIndex(0);
     setCurrentRowIndex(currentRowIndex + 1);
     setMessage("");
+    compareWords(); // Continua com a verificação de cores
   };
+
 
   // Função que retorna a cor para cada letra na tentativa
 
@@ -152,6 +165,28 @@ export default function useController() {
         }
       }
     }
+
+    //Se a letra n for nem verde nem amarela ela deve ser vermelha (Percorre toda a palavra)
+    const tiles = document.querySelectorAll('.tile-row .tile'); // Seleciona todas as tiles de uma linha
+
+    result.forEach((color, index) => {
+      if (color === "") {
+        result[index] = "red";
+
+        const element = tiles[index];
+
+        if (element) {
+          element.classList.add('default-border');
+          element.classList.add('shake');
+
+          setTimeout(() => {
+            element.classList.remove('shake');
+            element.classList.add('default-border');
+          }, 100);
+        }
+      }
+    });
+
     const updatedColors = [...colors];
     updatedColors[currentRowIndex] = result;
     setColors(updatedColors);
@@ -169,16 +204,22 @@ export default function useController() {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [rows, currentRowIndex, isGameOver, currentLetterIndex]);
+  useEffect(() => {
+    console.log("isShaking", isShaking);
+    isShaking && setTimeout(() => {
+      setIsShaking(false);
+    }, 300); // Executa a função após 500ms (0.5s) para deixar o shake mais suave
+  }, [isShaking]);
 
   return {
     rows,
     word,
     isWin,
-    message,
     colors,
-    isGameOver,
+    message,
     currentRowIndex,
     currentLetterIndex,
+    isGameOver,isShaking,
     startGame,
     onClickLetter,
     handleKeyPress,

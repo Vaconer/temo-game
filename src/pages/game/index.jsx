@@ -37,6 +37,7 @@ function Game() {
                   } // Se é o foco
                   disabled={attemptIndex > controller.currentRowIndex}
                   onClick={() => controller.onClickLetter(index)}
+                  error={attemptIndex == controller.currentRowIndex &&controller.isShaking}
                 />
               );
             })}

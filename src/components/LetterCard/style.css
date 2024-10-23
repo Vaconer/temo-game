@@ -23,6 +23,28 @@
   border: 3px solid #d3ad69;
 }
 
+@keyframes shake {
+  0%, 100% { 
+    transform: translateX(0); 
+    border-color: #63575a; /* Cor padrão no início e no fim */
+  }
+  25%, 75% { 
+    transform: translateX(-
+    10px); 
+    border-color: #d36969 ; /* Borda vermelha durante o shake */
+  }
+  50% { 
+    transform: translateX(10
+    px); 
+    border-color: #d36969; /* Borda vermelha durante o shake */
+  }
+}
+
+
+
+
+
+
 .in-focus {
   border: 3px solid #63575a !important;
 }
@@ -30,5 +52,9 @@
   background: rgba(0, 0, 0, 0.2) !important;
   cursor: default !important;
   border: 3px solid transparent !important;
-  //color: transparent !important;
+  color: transparent !important;
+}
+
+.shake {
+  animation: shake 0.1s ease-in-out ;
 }
